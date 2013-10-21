@@ -3,16 +3,6 @@
 //          Last Updated:2013-8-21
 // =============================================
 
-$ui-classes:      true !default;
-$ui-modifiers:    "dismissible" !default;
-$ui-states:       "info"  "alert" "warning" "error" "success" "question" !default;
-$ui-icons:        "\f05a" "\f06a" "\f071"   "\f057" "\f058"   "\f059" !default;
-$radius-helpers:  "square" "round" !default;
-$size-helpers:    "small" "medium" "large" !default;
-$aria-selectors:  true !default;
-$default-radius:  4px !default;
-
-
 %message {
   @extend %relative;
   word-wrap: break-word;
@@ -22,7 +12,7 @@ $default-radius:  4px !default;
   border: 1px solid $border-color;
   font-weight: bold;
   text-decoration: none;
-  @include rounded($default-radius);
+  border-radius: $default-radius;
   &:before {
     @include icon-FontAwesome();
     content: $icon-info-sign;
@@ -135,47 +125,20 @@ $default-radius:  4px !default;
   }
 }
 
-@mixin message-modifiers() {
-  @for $i from 1 through length($ui-modifiers) {
-    &.#{nth($ui-modifiers, $i)} {
-      @extend %message-#{nth($ui-modifiers, $i)};
-    }
-  }
-  @for $i from 1 through length($ui-states) {
-    &.#{nth($ui-states, $i)} {
-      @extend %message-#{nth($ui-states, $i)};
-    }
-  }
-  @for $i from 1 through length($radius-helpers) {
-    &.#{nth($radius-helpers, $i)} {
-      @extend %message-#{nth($radius-helpers, $i)};
-    }
-  }
-  @for $i from 1 through length($size-helpers) {
-    &.#{nth($size-helpers, $i)} {
-      @extend %message-#{nth($size-helpers, $i)};
-    }
-  }
-  @for $i from 1 through length($modifier-name) {
-    &.#{nth($modifier-name, $i)} {
-      @extend %message-#{nth($modifier-name, $i)};
-    }
-  }
-}
+$message-selectors: '';
 
 @if $ui-classes {
-  .message {
-    @extend %message;
-    @include message-modifiers;
+  $message-selectors: ".message";
+}
+@if $aria-selectors {
+  @if $ui-classes {
+    $message-selectors: #{$message-selectors + ", "};
   }
+  $message-selectors: #{$message-selectors + '[role~="alert"], [role~="status"]'};
 }
 
-@if $aria-selectors {
-  [role~="alert"], [role~="status"] {
-    @extend %message;
-    
-    @if $ui-classes {
-      @include message-modifiers;
-    }
-  }
+#{$message-selectors} {
+  @extend %message;
+  @include message-modifiers;
 }
+

@@ -10,9 +10,8 @@
 
 
 //-------- REQUIRED COMPONENTS: --------//
-@import "core/all-core";    // constants, defaults, mixins, breakpoints, color palette
-@import "base/all-base";    // reset, globals, grid, flexbox, helpers
-@import "icons/all-icons";  // font awesome icons
+@import "core/all-core";    // framework defaults, variable, constants, mixins, CSS reset, global styles, grid system, & helpers
+@import "icons/all-icons";  // font awesome icons (used by multiple components)
 
 
 

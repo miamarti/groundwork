@@ -1,15 +1,16 @@
 // =============================================
 //       GroundworkCSS by Gary Hepting
-//          Last Updated:2013-8-16
+//          Last Updated:2013-10-20
 // =============================================
 
-
-
-
-// core dependancies
+// core resources
 @import "compass";
-@import "constants";
-@import "breakpoints";
 @import "defaults";
-@import "palette";
-@import "mixins-core";
+@import "mixins";
+// base styles
+@import "reset";
+@import "global";
+@import "helpers";
+@import "grid";
+@import "flex-box";
+

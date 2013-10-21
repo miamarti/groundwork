@@ -1,0 +1,168 @@
+// =============================================
+//    Fractional grid system by Gary Hepting
+//          Last Updated:2013-8-16
+//
+//    ***** REQUIRES BORDER BOX SIZING *****
+//
+// =============================================
+
+$grid-class-selectors:  '';
+$grid-count: 0;
+@each $denominator in $grid-columns {
+  $grid-count: $grid-count + 1;
+  @for $numerator from 1 through $denominator - 1 {
+    @if $numerator == 1 {
+      $grid-class-selectors: #{$grid-class-selectors + '.' + nth($numbers, $numerator) + '-' + nth($fractions-singular, $denominator)};
+    }@else {
+      $grid-class-selectors: #{$grid-class-selectors + ', ' + '.' + nth($numbers, $numerator) + '-' + nth($fractions-plural, $denominator)};
+    }
+    @if $grid-count < length($grid-columns) {
+      $grid-class-selectors: #{$grid-class-selectors + ', '};
+    }
+  }
+}
+
+///////////////////////////////////////////////
+//    grid system - placeholders & classes   //
+///////////////////////////////////////////////
+
+%container {
+  @if $responsive {
+    max-width: $container-width;
+  } @else {
+    width: $container-width;
+  }
+  margin: 0 auto;
+}
+
+%row {
+  @include _clear;
+  width: $one-whole;
+}
+
+%column {
+  @include _grid-column;
+}
+
+%centered-column {
+  float: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+$grid-selector-types: "%";
+
+@if $grid-classes {
+  .container          { @extend %container; }
+  .row                { @extend %row; }
+  .column             { @extend %column; }
+  .centered           { @extend %centered-column; }
+  $grid-selector-types: "%" ".";
+}
+
+// generate grid selectors
+@each $selector in $grid-selector-types {
+  @each $denominator in $grid-columns {
+    @for $numerator from 1 through $denominator - 1 {
+      $grid-selector: '';
+      @if $numerator == 1 {
+        $grid-selector: #{$selector + nth($numbers, $numerator) + '-' + nth($fractions-singular, $denominator)};
+      }@else{
+        $grid-selector: #{$selector + nth($numbers, $numerator) + '-' + nth($fractions-plural, $denominator)};
+      }
+      #{$grid-selector} {
+        @extend %column;
+        width: percentage($numerator / $denominator);
+        @for $num from 1 through $denominator - $numerator {
+          &#{$selector + 'right-' + nth($numbers, $num)} {
+            left: percentage($num / $denominator);
+          }
+          &#{$selector + 'left-' + nth($numbers, $num)} {
+            right: percentage($num / $denominator);
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin _grid-blocks($number) {
+  width: percentage(1 / $number) !important;
+  clear: none !important;
+  float: left !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+@if $grid-block-classes {
+  // grid blocks
+  @each $number in $grid-blocks {
+    .#{nth($numbers, $number) + '-up'} {
+      @include _grid-blocks($number);
+      // grid blocks nth clearfix
+      &:nth-child(#{$number}n+1) {
+        clear: both !important;
+      }
+    }
+  }
+  @if $responsive {
+    // desktop grid blocks
+    @media #{$desktop} {
+      @each $number in $grid-blocks {
+        .#{nth($numbers, $number) + '-up-desktop'} {
+          @include _grid-blocks($number);
+          // desktop grid blocks nth clearfix
+          &:nth-child(#{$number}n+1) {
+            clear: both !important;
+          }
+        }
+      }
+    }
+    // ipad grid blocks
+    @media #{$ipad} and #{$tablet} and #{$not-mobile} {
+      @each $number in $grid-blocks {
+        .#{nth($numbers, $number) + '-up-ipad'} {
+          @include _grid-blocks($number);
+          // ipad grid blocks nth clearfix
+          &:not(:nth-child(#{$number}n+1)) {
+            clear: none !important;
+          }
+          &:nth-child(#{$number}n+1) {
+            clear: both !important;
+          }
+        }
+      }
+    }
+    // small-tablet grid blocks
+    @media #{$small-tablet} and #{$not-mobile} {
+      @each $number in $grid-blocks {
+        .#{nth($numbers, $number) + '-up-small-tablet'} {
+          @include _grid-blocks($number);
+          // small-tablet grid blocks nth clearfix
+          &:not(:nth-child(#{$number}n+1)) {
+            clear: none !important;
+          }
+          &:nth-child(#{$number}n+1) {
+            clear: both !important;
+          }
+        }
+      }
+    }
+    // mobile grid blocks
+    @media #{$mobile} {
+      @each $number in $grid-blocks {
+        .#{nth($numbers, $number) + '-up-mobile'} {
+          @include _grid-blocks($number);
+          // mobile grid blocks nth clearfix
+          &:not(:nth-child(#{$number}n+1)) {
+            clear: none !important;
+          }
+          &:nth-child(#{$number + 1}) {
+            clear: both !important;
+          }
+        }
+      }
+    }
+  }
+}
+
